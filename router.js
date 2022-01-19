@@ -11,6 +11,7 @@ router.put("/getBellmanFord", func.getBellmanFord);
 router.put("/getFloydWarshall", func.getFloydWarshall);
 router.put("/getKruskal", func.getKruskal);
 router.put("/getPrims", func.getPrims);
+router.put("/getBoruvka", func.getBoruvka);
 
 // router.delete("/:id", func.deleteKPI);
 

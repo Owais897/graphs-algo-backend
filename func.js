@@ -86,7 +86,16 @@ exports.getFloydWarshall = (req, res, next) => {
 
     console.log("ssssssssssssssssss");
 
-    let result = {};
+    let path = graph.getShortestVisitingPath([
+      // ...body.nodes.map((v) => `${v.id}`),
+      "0",
+      "5",
+    ]);
+    console.log("path: ", path);
+    distance = graph.getShortestDistance("5", "0");
+    console.log("distance: ", distance);
+
+    let result = { graph };
 
     res.status(200).send(result);
   } catch (error) {
@@ -145,6 +154,27 @@ exports.getPrims = (req, res, next) => {
       var w = e.other(v);
       console.log("(" + v + ", " + w + "): " + e.weight);
     }
+    res.status(200).send(result);
+  } catch (error) {
+    console.log("error: ", error);
+  }
+};
+exports.getBoruvka = (req, res, next) => {
+  try {
+    const body = req.body;
+    console.log("body---------: ", body);
+    let Graph = require("./brovka");
+    var g = new Graph(10);
+
+    body.edges.forEach((v) => {
+      g.addEdge(v.from, v.to, v.weight);
+    });
+    g.printGraph();
+    let k = g.boruvkaMST();
+    console.log("k: ", k);
+
+    console.log("ssssssssssssssssss");
+    let result = { edgesInclude: k };
     res.status(200).send(result);
   } catch (error) {
     console.log("error: ", error);
