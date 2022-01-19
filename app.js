@@ -6,14 +6,6 @@ var logger = require("morgan");
 var cors = require("cors");
 var route = require("./router");
 
-// const usersRouter = require("./src/routes/user.routes");
-// const kpisRouter = require("./src/routes/kpi.routes");
-// const userkpisRouter = require("./src/routes/userkpi.routes");
-// const leaderboardRouter = require("./src/routes/leaderboard.routes");
-// const kpiAssigneeRouter = require("./src/routes/kpiAssignee.route");
-// const projectRouter = require("./src/routes/project.route");
-// const userprojectRouter = require("./src/routes/userProject.route");
-
 // const db = require("./src/config/db.config");
 
 var app = express();
@@ -30,14 +22,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "src/views")));
 
-// app.use("/api/v1/test", usersRouter);
-// app.use("/api/v1/users", usersRouter);
 app.use("/api/v1/kpis", route);
-// app.use("/api/v1/userkpi", userkpisRouter);
-// app.use("/api/v1/leaderboard", leaderboardRouter);
-// app.use("/api/v1/kpiassignee", kpiAssigneeRouter);
-// app.use("/api/v1/project", projectRouter);
-// app.use("/api/v1/userproject", userprojectRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
