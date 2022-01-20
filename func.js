@@ -1,4 +1,5 @@
 var jsgraphs = require("js-graph-algorithms");
+const { performance } = require("perf_hooks");
 
 exports.setStatus = (req, res, next) => {
   const body = req.body;
@@ -8,6 +9,7 @@ exports.setStatus = (req, res, next) => {
 
 exports.getDijkastra = (req, res, next) => {
   try {
+    var startTime = performance.now();
     const body = req.body;
     console.log("body---------: ", body);
     var g = new jsgraphs.WeightedDiGraph(body.nodes.length);
@@ -34,6 +36,10 @@ exports.getDijkastra = (req, res, next) => {
         console.log("=====distance: " + dijkstra.distanceTo(v) + "=========");
       }
     }
+    var endTime = performance.now();
+
+    console.log(`Call to doSomething took ${endTime - startTime} milliseconds`);
+
     res.status(200).send(result);
   } catch (error) {
     console.log("error: ", error);
@@ -42,6 +48,7 @@ exports.getDijkastra = (req, res, next) => {
 
 exports.getBellmanFord = (req, res, next) => {
   try {
+    var startTime = performance.now();
     const body = req.body;
     console.log("body---------: ", body);
     var g = new jsgraphs.WeightedDiGraph(body.nodes.length);
@@ -62,12 +69,18 @@ exports.getBellmanFord = (req, res, next) => {
         for (var i = 0; i < path.length; ++i) {
           var e = path[i];
           console.log(e.from() + " => " + e.to() + ": " + e.weight);
-          result.push(`${e.from()} -> ${e.to()} = ${e.weight}`);
+          result.push(
+            `from edge ${e.from()} -> ${e.to()} = ${e.weight}(weight)`
+          );
         }
         console.log("=====path from 0 to " + v + " end==========");
         console.log("=====distance: " + bf.distanceTo(v) + "=========");
       }
     }
+    var endTime = performance.now();
+
+    console.log(`Call to doSomething took ${endTime - startTime} milliseconds`);
+
     res.status(200).send(result);
   } catch (error) {
     console.log("error: ", error);
@@ -76,6 +89,7 @@ exports.getBellmanFord = (req, res, next) => {
 
 exports.getFloydWarshall = (req, res, next) => {
   try {
+    var startTime = performance.now();
     const body = req.body;
     console.log("body---------: ", body);
 
@@ -96,6 +110,9 @@ exports.getFloydWarshall = (req, res, next) => {
     console.log("distance: ", distance);
 
     let result = { graph };
+    var endTime = performance.now();
+
+    console.log(`Call to doSomething took ${endTime - startTime} milliseconds`);
 
     res.status(200).send([graph.distance]);
   } catch (error) {
@@ -105,6 +122,7 @@ exports.getFloydWarshall = (req, res, next) => {
 
 exports.getKruskal = (req, res, next) => {
   try {
+    var startTime = performance.now();
     const body = req.body;
     console.log("body---------: ", body);
     var g = new jsgraphs.WeightedDiGraph(body.nodes.length);
@@ -118,14 +136,19 @@ exports.getKruskal = (req, res, next) => {
     console.log("kruskal: ", kruskal);
     var mst = kruskal.mst;
 
-    let result = { mst };
+    let result = [];
     for (var i = 0; i < mst.length; ++i) {
       var e = mst[i];
       var v = e.either();
       var w = e.other(v);
       console.log("(" + v + ", " + w + "): " + e.weight);
+      result.push("(" + v + ", " + w + "): " + e.weight);
     }
-    res.status(200).send(result);
+    var endTime = performance.now();
+
+    console.log(`Call to doSomething took ${endTime - startTime} milliseconds`);
+
+    res.status(200).send([...result]);
   } catch (error) {
     console.log("error: ", error);
   }
@@ -134,7 +157,9 @@ exports.getKruskal = (req, res, next) => {
 exports.getPrims = (req, res, next) => {
   try {
     const body = req.body;
-    console.log("body---------: ", body);
+    // console.log("body---------: ", body);
+    var startTime = performance.now();
+
     var g = new jsgraphs.WeightedDiGraph(body.nodes.length);
     console.log("aaaaaaaaaaaaaaa");
     body.edges.forEach((v) => {
@@ -142,25 +167,32 @@ exports.getPrims = (req, res, next) => {
       g.addEdge(new jsgraphs.Edge(v.from, v.to, v.weight));
     });
     console.log("ssssssssssssssssss");
-    var prim = new jsgraphs.EagerPrimMST(g);
+    var prim = new jsgraphs.KruskalMST(g);
     console.log("prim: ", prim);
 
     var mst = prim.mst;
 
-    let result = { mst };
+    let result = [];
     for (var i = 0; i < mst.length; ++i) {
       var e = mst[i];
       var v = e.either();
       var w = e.other(v);
       console.log("(" + v + ", " + w + "): " + e.weight);
+      result.push("(" + v + ", " + w + "): " + e.weight);
     }
-    res.status(200).send(result);
+
+    var endTime = performance.now();
+
+    console.log(`Call to doSomething took ${endTime - startTime} milliseconds`);
+
+    res.status(200).send([...result]);
   } catch (error) {
     console.log("error: ", error);
   }
 };
 exports.getBoruvka = (req, res, next) => {
   try {
+    var startTime = performance.now();
     const body = req.body;
     console.log("body---------: ", body);
     let Graph = require("./brovka");
@@ -175,7 +207,11 @@ exports.getBoruvka = (req, res, next) => {
 
     console.log("ssssssssssssssssss");
     let result = { edgesInclude: k };
-    res.status(200).send(result);
+    var endTime = performance.now();
+
+    console.log(`Call to doSomething took ${endTime - startTime} milliseconds`);
+
+    res.status(200).send([...k]);
   } catch (error) {
     console.log("error: ", error);
   }
@@ -183,20 +219,32 @@ exports.getBoruvka = (req, res, next) => {
 
 exports.getCluster = (req, res, next) => {
   try {
+    var startTime = performance.now();
     const body = req.body;
     console.log("body---------: ", body);
-    let Graph = require("./brovka");
-    var g = new Graph(body.nodes.length);
+    let Graph = require("graph-data-structure");
+    var g = Graph();
 
     body.edges.forEach((v) => {
       g.addEdge(v.from, v.to, v.weight);
     });
-    g.printGraph();
-    let k = g.boruvkaMST();
-    console.log("k: ", k);
+    let n = g.nodes();
+    let t = 0;
+
+    n.map((v) => {
+      let k = g.indegree(v);
+      t += k;
+      console.log("k: ", k);
+    });
+
+    console.log("t : ", t);
 
     console.log("ssssssssssssssssss");
-    let result = { edgesInclude: k };
+    let result = [t / n.length / 10];
+    var endTime = performance.now();
+
+    console.log(`Call to doSomething took ${endTime - startTime} milliseconds`);
+
     res.status(200).send(result);
   } catch (error) {
     console.log("error: ", error);
