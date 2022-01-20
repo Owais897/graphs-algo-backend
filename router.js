@@ -12,6 +12,7 @@ router.put("/getFloydWarshall", func.getFloydWarshall);
 router.put("/getKruskal", func.getKruskal);
 router.put("/getPrims", func.getPrims);
 router.put("/getBoruvka", func.getBoruvka);
+router.put("/getCluster", func.getCluster);
 
 // router.delete("/:id", func.deleteKPI);
 
